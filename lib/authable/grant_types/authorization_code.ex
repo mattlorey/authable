@@ -137,12 +137,12 @@ defmodule Authable.GrantType.AuthorizationCode do
     do: {:error, err, code}
 
   defp validate_token_redirect_uri({:ok, token}, redirect_uri) do
-    if token.details["redirect_uri"] != redirect_uri do
+    if token.details["redirect_uri"] =~ redirect_uri do
+      {:ok, token}
+    else
       GrantTypeError.invalid_client(
         "The redirection URI provided does not match a pre-registered value."
       )
-    else
-      {:ok, token}
     end
   end
 
